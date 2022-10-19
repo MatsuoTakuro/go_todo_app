@@ -11,7 +11,6 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// test golangci workflow
 func main() {
 	if len(os.Args) != 2 {
 		log.Printf("need port number\n")
