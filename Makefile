@@ -22,6 +22,7 @@ ps: ## Check container status
 	docker compose ps
 
 test: ## Execute tests
+# go: -race requires cgo; enable cgo by setting CGO_ENABLED=1
 	go test -race -shuffle=on ./...
 
 help: ## Show options
