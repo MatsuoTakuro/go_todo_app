@@ -12,7 +12,7 @@ import (
 
 type AddTask struct {
 	Store     *store.TaskStore
-	validator *validator.Validate
+	Validator *validator.Validate
 }
 
 func (at *AddTask) ServerHTTP(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +28,7 @@ func (at *AddTask) ServerHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := at.validator.Struct(body)
+	err := at.Validator.Struct(body)
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
