@@ -3,7 +3,7 @@
 
 DOCKER_TAG := latest
 build: ## Build docker image to deploy
-	docker build -t budougumi0617/gotodo:${DOCKER_TAG} \
+	docker build -t matsuotakuro/gotodo:${DOCKER_TAG} \
 		--target deploy ./
 
 build-local: ## Build docker image to local development
@@ -22,6 +22,7 @@ ps: ## Check container status
 	docker compose ps
 
 test: ## Execute tests
+  ## go: -race requires cgo; enable cgo by setting CGO_ENABLED=1
 	go test -race -shuffle=on ./...
 
 dry-migrate: ## Try migration
