@@ -23,7 +23,7 @@ ps: ## Check container status
 
 test: ## Execute tests
   ## go: -race requires cgo; enable cgo by setting CGO_ENABLED=1
-	go test -race -shuffle=on ./...
+	go test -race -shuffle=on -v ./...
 
 dry-migrate: ## Try migration
   ## --dry-run option doesn't run DDLs but just shows them
