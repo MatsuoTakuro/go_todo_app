@@ -5,10 +5,12 @@ import (
 
 	"github.com/MatsuoTakuro/go_todo_app/entity"
 	"github.com/MatsuoTakuro/go_todo_app/store"
+	"github.com/jmoiron/sqlx"
 )
 
 type ListTask struct {
-	Store *store.TaskStore
+	DB   *sqlx.DB
+	Repo *store.Repository
 }
 
 type task struct {
@@ -17,9 +19,15 @@ type task struct {
 	Status entity.TaskStatus `json:"status"`
 }
 
-func (lt *ListTask) ServerHTTP(w http.ResponseWriter, r *http.Request) {
+func (lt *ListTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	tasks := lt.Store.All()
+	tasks, err := lt.Repo.ListTasks(ctx, lt.DB)
+	if err != nil {
+		RespondJSON(ctx, w, &ErrResponse{
+			Message: err.Error(),
+		}, http.StatusInternalServerError)
+		return
+	}
 	rsp := []task{}
 	for _, t := range tasks {
 		rsp = append(rsp, task{

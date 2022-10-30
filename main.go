@@ -24,11 +24,15 @@ func run(ctx context.Context) error {
 	}
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {
-		log.Fatalf("failded to listen port %d: %v", cfg.Port, err)
+		log.Fatalf("failed to listen port %d: %v", cfg.Port, err)
 	}
 	url := fmt.Sprintf("http://%s", l.Addr().String())
 	log.Printf("start with: %v", url)
-	mux := NewMux()
+	mux, cleanup, err := NewMux(ctx, cfg)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
 	s := NewServer(l, mux)
 	return s.Run(ctx)
 }

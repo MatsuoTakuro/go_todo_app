@@ -31,6 +31,7 @@ func (s *Server) Run(ctx context.Context) error {
 	eg.Go(func() error {
 		if err := s.srv.Serve(s.l); err != nil && err != http.ErrServerClosed {
 			log.Printf("failed to close: %+v", err)
+			return err
 		}
 		return nil
 	})

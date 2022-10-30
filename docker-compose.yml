@@ -12,11 +12,13 @@ services:
       TODO_DB_PORT: 3306
       TODO_DB_USER: todo
       TODO_DB_PASSWORD: todo
-      TODO_DB_DATABASE: todo
+      TODO_DB_NAME: todo
     volumes:
       - .:/app
     ports:
       - "18000:8080"
+    links:
+      - todo-db
   todo-db:
     image: mysql:8.0.29
     platform: linux/amd64

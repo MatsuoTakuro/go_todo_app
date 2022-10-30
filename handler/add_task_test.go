@@ -56,7 +56,7 @@ func TestAddTask(t *testing.T) {
 				},
 				Validator: validator.New(),
 			}
-			handler.ServerHTTP(w, r)
+			handler.ServeHTTP(w, r)
 
 			rsp := w.Result()
 			testutil.AsserrtReponse(t,
