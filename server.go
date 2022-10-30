@@ -29,7 +29,8 @@ func (s *Server) Run(ctx context.Context) error {
 	defer stop()
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
-		if err := s.srv.Serve(s.l); err != nil && err != http.ErrServerClosed {
+		if err := s.srv.Serve(s.l); err != nil &&
+			err != http.ErrServerClosed {
 			log.Printf("failed to close: %+v", err)
 			return err
 		}
