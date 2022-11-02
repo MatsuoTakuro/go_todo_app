@@ -1,3 +1,4 @@
+# デプロイ用コンテナに含めるバイナリを作成するコンテナ
 FROM golang:1.18.2-bullseye as deploy-builder
 
 WORKDIR /app
@@ -8,6 +9,7 @@ RUN go mod download
 COPY . .
 RUN go build -trimpath -ldflags "-w -s" -o app
 
+# ---------------------------------------------------
 
 FROM debian:bullseye-slim as deploy
 
@@ -17,6 +19,7 @@ COPY --from=deploy-builder /app/app .
 
 CMD ["./app"]
 
+# ---------------------------------------------------
 
 FROM golang:1.18.2 as dev
 WORKDIR /app

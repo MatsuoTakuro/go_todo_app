@@ -1,6 +1,8 @@
 package clock
 
-import "time"
+import (
+	"time"
+)
 
 type Clocker interface {
 	Now() time.Time
@@ -14,6 +16,6 @@ func (r RealClocker) Now() time.Time {
 
 type FixedClocker struct{}
 
-func (f FixedClocker) Now() time.Time {
+func (fc FixedClocker) Now() time.Time {
 	return time.Date(2022, 5, 10, 12, 34, 56, 0, time.UTC)
 }
