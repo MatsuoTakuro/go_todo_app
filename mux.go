@@ -20,26 +20,18 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		_, _ = w.Write([]byte(`{"status": "ok"}`))
 	})
-
 	v := validator.New()
 	db, cleanup, err := store.New(ctx, cfg)
 	if err != nil {
 		return nil, cleanup, err
 	}
 	r := store.Repository{Clocker: clock.RealClocker{}}
-	at := &handler.AddTask{
-		DB:        db,
-		Repo:      &r,
-		Validator: v,
-	}
+	at := &handler.AddTask{DB: db, Repo: &r, Validator: v}
 	// curl -i -XPOST localhost:18000/tasks -d @./handler/testdata/add_task/ok_req.json.golden
 	// curl -i -XPOST localhost:18000/tasks -d @./handler/testdata/add_task/bad_req.json.golden
 	mux.Post("/tasks", at.ServeHTTP)
 
-	lt := &handler.ListTask{
-		DB:   db,
-		Repo: &r,
-	}
+	lt := &handler.ListTask{DB: db, Repo: &r}
 	// curl -i -XGET localhost:18000/tasks
 	mux.Get("/tasks", lt.ServeHTTP)
 
