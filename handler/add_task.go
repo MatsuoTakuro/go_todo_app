@@ -18,19 +18,16 @@ type AddTask struct {
 
 func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-
-	var body struct {
+	var b struct {
 		Title string `json:"title" validate:"required"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)
 		return
 	}
-
-	err := at.Validator.Struct(body)
-	if err != nil {
+	if err := at.Validator.Struct(b); err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusBadRequest)
@@ -38,16 +35,16 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t := &entity.Task{
-		Title:  body.Title,
+		Title:  b.Title,
 		Status: entity.TaskStatusTodo,
 	}
-	err = at.Repo.AddTask(ctx, at.DB, t)
+	err := at.Repo.AddTask(ctx, at.DB, t)
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)
+		return
 	}
-
 	rsp := struct {
 		ID entity.TaskID `json:"id"`
 	}{ID: t.ID}
