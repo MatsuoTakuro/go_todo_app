@@ -59,7 +59,7 @@ func TestAddTask(t *testing.T) {
 			handler.ServeHTTP(w, r)
 
 			rsp := w.Result()
-			testutil.AsserrtReponse(t,
+			testutil.AssertResponse(t,
 				rsp, sub.want.status, testutil.LoadFile(t, sub.want.rspFile))
 		})
 	}

@@ -29,8 +29,7 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := at.Validator.Struct(body)
-	if err != nil {
+	if err := at.Validator.Struct(body); err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusBadRequest)
@@ -41,11 +40,12 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Title:  body.Title,
 		Status: entity.TaskStatusTodo,
 	}
-	err = at.Repo.AddTask(ctx, at.DB, t)
+	err := at.Repo.AddTask(ctx, at.DB, t)
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)
+		return
 	}
 
 	rsp := struct {

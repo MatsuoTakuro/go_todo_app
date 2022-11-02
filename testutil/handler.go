@@ -25,7 +25,7 @@ func AssertJSON(t *testing.T, want, got []byte) {
 	}
 }
 
-func AsserrtReponse(t *testing.T, got *http.Response, status int, body []byte) {
+func AssertResponse(t *testing.T, got *http.Response, status int, body []byte) {
 	t.Helper()
 
 	t.Cleanup(func() {

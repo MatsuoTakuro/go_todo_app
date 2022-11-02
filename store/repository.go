@@ -13,8 +13,13 @@ import (
 
 func New(ctx context.Context, cfg *config.Config) (*sqlx.DB, func(), error) {
 	db, err := sql.Open("mysql",
-		fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true",
-			cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName))
+		fmt.Sprintf(
+			"%s:%s@tcp(%s:%d)/%s?parseTime=true",
+			cfg.DBUser, cfg.DBPassword,
+			cfg.DBHost, cfg.DBPort,
+			cfg.DBName,
+		),
+	)
 
 	if err != nil {
 		return nil, nil, err
@@ -28,6 +33,10 @@ func New(ctx context.Context, cfg *config.Config) (*sqlx.DB, func(), error) {
 
 	xdb := sqlx.NewDb(db, "mysql")
 	return xdb, func() { _ = db.Close() }, nil
+}
+
+type Repository struct {
+	Clocker clock.Clocker
 }
 
 type Beginner interface {
@@ -58,7 +67,3 @@ var (
 	_ Execer   = (*sqlx.DB)(nil)
 	_ Execer   = (*sqlx.Tx)(nil)
 )
-
-type Repository struct {
-	Clocker clock.Clocker
-}
