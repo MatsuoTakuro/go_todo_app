@@ -38,3 +38,6 @@ help: ## Show options
 
 db-in:
 	docker exec -it todo-db bash -c "mysql -h 127.0.0.1 -P 3306 -u todo -p"
+
+generate: ## Generate codes
+	go generate ./...

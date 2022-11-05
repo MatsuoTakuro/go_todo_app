@@ -2,19 +2,18 @@ package handler
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/MatsuoTakuro/go_todo_app/entity"
 	"github.com/MatsuoTakuro/go_todo_app/testutil"
 	"github.com/go-playground/validator/v10"
-	"github.com/jmoiron/sqlx"
 )
 
 func TestAddTask(t *testing.T) {
-	t.Skip()
-	t.Parallel()
-
 	type want struct {
 		status  int
 		rspFile string
@@ -49,16 +48,26 @@ func TestAddTask(t *testing.T) {
 				"/tasks",
 				bytes.NewReader(testutil.LoadFile(t, sub.reqFile)),
 			)
+			moq := &AddTaskServiceMock{}
+			moq.AddTaskFunc = func(
+				ctx context.Context, title string,
+			) (*entity.Task, error) {
+				if sub.want.status == http.StatusOK {
+					return &entity.Task{ID: 1}, nil
+				}
+				return nil, errors.New("error from mock")
+			}
 
 			handler := AddTask{
-				DB:        &sqlx.DB{},
+				Service:   moq,
 				Validator: validator.New(),
 			}
 			handler.ServeHTTP(w, r)
 
 			rsp := w.Result()
 			testutil.AssertResponse(t,
-				rsp, sub.want.status, testutil.LoadFile(t, sub.want.rspFile))
+				rsp, sub.want.status, testutil.LoadFile(t, sub.want.rspFile),
+			)
 		})
 	}
 }
