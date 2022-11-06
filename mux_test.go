@@ -13,8 +13,6 @@ import (
 var _ http.ResponseWriter = (*httptest.ResponseRecorder)(nil)
 
 func TestNewMux(t *testing.T) {
-	t.Skip()
-
 	w := httptest.NewRecorder() // http.ResponseWriter implements http.ResponseWriter
 	r := httptest.NewRequest(http.MethodGet, "/health", nil)
 	cfg, _ := config.New()

@@ -16,17 +16,19 @@ import (
 func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), error) {
 	mux := chi.NewRouter()
 
-	// curl -i -XGET localhost:18000/health
+	// curl -i -X GET localhost:18000/health
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		_, _ = w.Write([]byte(`{"status": "ok"}`))
 	})
+
 	v := validator.New()
 	db, cleanup, err := store.New(ctx, cfg)
 	if err != nil {
 		return nil, cleanup, err
 	}
 	r := store.Repository{Clocker: clock.RealClocker{}}
+
 	at := &handler.AddTask{
 		Service: &service.AddTask{
 			DB:   db,
@@ -34,8 +36,8 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 		},
 		Validator: v,
 	}
-	// curl -i -XPOST localhost:18000/tasks -d @./handler/testdata/add_task/ok_req.json.golden
-	// curl -i -XPOST localhost:18000/tasks -d @./handler/testdata/add_task/bad_req.json.golden
+	// curl -i -X POST localhost:18000/tasks -d @./handler/testdata/add_task/ok_req.json.golden
+	// curl -i -X POST localhost:18000/tasks -d @./handler/testdata/add_task/bad_req.json.golden
 	mux.Post("/tasks", at.ServeHTTP)
 
 	lt := &handler.ListTask{
@@ -44,8 +46,18 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 			Repo: &r,
 		},
 	}
-	// curl -i -XGET localhost:18000/tasks
+	// curl -i -X GET localhost:18000/tasks
 	mux.Get("/tasks", lt.ServeHTTP)
+
+	ru := &handler.RegisterUser{
+		Service: &service.RegisterUser{
+			DB:   db,
+			Repo: &r,
+		},
+		Validator: v,
+	}
+	// curl -X POST localhost:18000/register -d '{"name": "budou2", "password":"test", "role":"admin"}'
+	mux.Post("/register", ru.ServeHTTP)
 
 	return mux, cleanup, nil
 }
