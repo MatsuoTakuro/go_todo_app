@@ -16,3 +16,4 @@
 
 *.code-workspace
 tmp/
+auth/cert/
