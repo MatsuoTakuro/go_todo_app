@@ -36,7 +36,7 @@ help: ## Show options
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-db-in:
+db-in: ## Enter MySQL container running
 	docker exec -it todo-db bash -c "mysql -h 127.0.0.1 -P 3306 -u todo -p"
 
 generate: ## Generate codes
