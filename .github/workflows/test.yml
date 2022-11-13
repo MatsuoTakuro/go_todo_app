@@ -42,11 +42,13 @@ jobs:
     - name: create public.pem
       env:
         PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-      run: echo -n $PUBLIC_KEY | base64 --decode > ./auth/cert/public.pem
+      run: |
+        mkdir ./cert
+        echo -n $PUBLIC_KEY | base64 --decode > ./cert/public.pem
     - name: create secret.pem
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      run: echo -n $SECRET_KEY | base64 --decode > ./auth/cert/secret.pem
+      run: echo -n $SECRET_KEY | base64 --decode > ./cert/secret.pem
     - run: go test ./... -coverprofile=coverage.out
     - name: report coverage
       uses: k1LoW/octocov-action@v0
