@@ -32,13 +32,27 @@ jobs:
         ports:
           - 6379:6379
     steps:
-      - uses: actions/setup-go@v3
+      - name: setup go
+        uses: actions/setup-go@v3
         with:
           go-version: '>=1.18'
-      - uses: actions/checkout@v3
-      - run: |
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: migrate mysql schema
+        run: |
           go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
           mysqldef -u todo -p todo -h 127.0.0.1 -P 3306 todo < ./_tools/mysql/schema.sql
-      - run: go test ./... -coverprofile=coverage.out
+
+      - name: create pems
+        env:
+          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          echo -n $PUBLIC_KEY  | base64 --decode > ./auth/cert/public.pem
+          echo -n $SECRET_KEY  | base64 --decode > ./auth/cert/secret.pem
+
       - name: report coverage
+        run: go test ./... -coverprofile=coverage.out
         uses: k1LoW/octocov-action@v0
