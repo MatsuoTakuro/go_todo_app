@@ -39,17 +39,14 @@ jobs:
     - run: |
         go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
         mysqldef -u todo -p todo -h 127.0.0.1 -P 3306 todo < ./_tools/mysql/schema.sql
-    - name: create public.pem
+    - name: create pems
       env:
         PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-      run: |
-        mkdir ./cert
-        echo -n $PUBLIC_KEY | base64 --decode > ./cert/public.pem
-    - name: create secret.pem
-      env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        echo -n $SECRET_KEY | base64 --decode > ./cert/secret.pem
+        mkdir ./auth/cert
+        echo -n $PUBLIC_KEY | base64 --decode > ./auth/cert/public.pem
+        echo -n $SECRET_KEY | base64 --decode > ./auth/cert/secret.pem
     - run: go test ./... -coverprofile=coverage.out
     - name: report coverage
       uses: k1LoW/octocov-action@v0
