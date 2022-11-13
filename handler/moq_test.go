@@ -15,19 +15,19 @@ var _ ListTasksService = &ListTasksServiceMock{}
 
 // ListTasksServiceMock is a mock implementation of ListTasksService.
 //
-// 	func TestSomethingThatUsesListTasksService(t *testing.T) {
+//	func TestSomethingThatUsesListTasksService(t *testing.T) {
 //
-// 		// make and configure a mocked ListTasksService
-// 		mockedListTasksService := &ListTasksServiceMock{
-// 			ListTasksFunc: func(ctx context.Context) (entity.Tasks, error) {
-// 				panic("mock out the ListTasks method")
-// 			},
-// 		}
+//		// make and configure a mocked ListTasksService
+//		mockedListTasksService := &ListTasksServiceMock{
+//			ListTasksFunc: func(ctx context.Context) (entity.Tasks, error) {
+//				panic("mock out the ListTasks method")
+//			},
+//		}
 //
-// 		// use mockedListTasksService in code that requires ListTasksService
-// 		// and then make assertions.
+//		// use mockedListTasksService in code that requires ListTasksService
+//		// and then make assertions.
 //
-// 	}
+//	}
 type ListTasksServiceMock struct {
 	// ListTasksFunc mocks the ListTasks method.
 	ListTasksFunc func(ctx context.Context) (entity.Tasks, error)
@@ -61,7 +61,8 @@ func (mock *ListTasksServiceMock) ListTasks(ctx context.Context) (entity.Tasks, 
 
 // ListTasksCalls gets all the calls that were made to ListTasks.
 // Check the length with:
-//     len(mockedListTasksService.ListTasksCalls())
+//
+//	len(mockedListTasksService.ListTasksCalls())
 func (mock *ListTasksServiceMock) ListTasksCalls() []struct {
 	Ctx context.Context
 } {
@@ -80,19 +81,19 @@ var _ AddTaskService = &AddTaskServiceMock{}
 
 // AddTaskServiceMock is a mock implementation of AddTaskService.
 //
-// 	func TestSomethingThatUsesAddTaskService(t *testing.T) {
+//	func TestSomethingThatUsesAddTaskService(t *testing.T) {
 //
-// 		// make and configure a mocked AddTaskService
-// 		mockedAddTaskService := &AddTaskServiceMock{
-// 			AddTaskFunc: func(ctx context.Context, title string) (*entity.Task, error) {
-// 				panic("mock out the AddTask method")
-// 			},
-// 		}
+//		// make and configure a mocked AddTaskService
+//		mockedAddTaskService := &AddTaskServiceMock{
+//			AddTaskFunc: func(ctx context.Context, title string) (*entity.Task, error) {
+//				panic("mock out the AddTask method")
+//			},
+//		}
 //
-// 		// use mockedAddTaskService in code that requires AddTaskService
-// 		// and then make assertions.
+//		// use mockedAddTaskService in code that requires AddTaskService
+//		// and then make assertions.
 //
-// 	}
+//	}
 type AddTaskServiceMock struct {
 	// AddTaskFunc mocks the AddTask method.
 	AddTaskFunc func(ctx context.Context, title string) (*entity.Task, error)
@@ -130,7 +131,8 @@ func (mock *AddTaskServiceMock) AddTask(ctx context.Context, title string) (*ent
 
 // AddTaskCalls gets all the calls that were made to AddTask.
 // Check the length with:
-//     len(mockedAddTaskService.AddTaskCalls())
+//
+//	len(mockedAddTaskService.AddTaskCalls())
 func (mock *AddTaskServiceMock) AddTaskCalls() []struct {
 	Ctx   context.Context
 	Title string
@@ -151,19 +153,19 @@ var _ RegisterUserService = &RegisterUserServiceMock{}
 
 // RegisterUserServiceMock is a mock implementation of RegisterUserService.
 //
-// 	func TestSomethingThatUsesRegisterUserService(t *testing.T) {
+//	func TestSomethingThatUsesRegisterUserService(t *testing.T) {
 //
-// 		// make and configure a mocked RegisterUserService
-// 		mockedRegisterUserService := &RegisterUserServiceMock{
-// 			RegisterUserFunc: func(ctx context.Context, name string, password string, role string) (*entity.User, error) {
-// 				panic("mock out the RegisterUser method")
-// 			},
-// 		}
+//		// make and configure a mocked RegisterUserService
+//		mockedRegisterUserService := &RegisterUserServiceMock{
+//			RegisterUserFunc: func(ctx context.Context, name string, password string, role string) (*entity.User, error) {
+//				panic("mock out the RegisterUser method")
+//			},
+//		}
 //
-// 		// use mockedRegisterUserService in code that requires RegisterUserService
-// 		// and then make assertions.
+//		// use mockedRegisterUserService in code that requires RegisterUserService
+//		// and then make assertions.
 //
-// 	}
+//	}
 type RegisterUserServiceMock struct {
 	// RegisterUserFunc mocks the RegisterUser method.
 	RegisterUserFunc func(ctx context.Context, name string, password string, role string) (*entity.User, error)
@@ -209,7 +211,8 @@ func (mock *RegisterUserServiceMock) RegisterUser(ctx context.Context, name stri
 
 // RegisterUserCalls gets all the calls that were made to RegisterUser.
 // Check the length with:
-//     len(mockedRegisterUserService.RegisterUserCalls())
+//
+//	len(mockedRegisterUserService.RegisterUserCalls())
 func (mock *RegisterUserServiceMock) RegisterUserCalls() []struct {
 	Ctx      context.Context
 	Name     string
@@ -225,5 +228,83 @@ func (mock *RegisterUserServiceMock) RegisterUserCalls() []struct {
 	mock.lockRegisterUser.RLock()
 	calls = mock.calls.RegisterUser
 	mock.lockRegisterUser.RUnlock()
+	return calls
+}
+
+// Ensure, that LoginServiceMock does implement LoginService.
+// If this is not the case, regenerate this file with moq.
+var _ LoginService = &LoginServiceMock{}
+
+// LoginServiceMock is a mock implementation of LoginService.
+//
+//	func TestSomethingThatUsesLoginService(t *testing.T) {
+//
+//		// make and configure a mocked LoginService
+//		mockedLoginService := &LoginServiceMock{
+//			LoginFunc: func(ctx context.Context, name string, password string) (string, error) {
+//				panic("mock out the Login method")
+//			},
+//		}
+//
+//		// use mockedLoginService in code that requires LoginService
+//		// and then make assertions.
+//
+//	}
+type LoginServiceMock struct {
+	// LoginFunc mocks the Login method.
+	LoginFunc func(ctx context.Context, name string, password string) (string, error)
+
+	// calls tracks calls to the methods.
+	calls struct {
+		// Login holds details about calls to the Login method.
+		Login []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Name is the name argument value.
+			Name string
+			// Password is the password argument value.
+			Password string
+		}
+	}
+	lockLogin sync.RWMutex
+}
+
+// Login calls LoginFunc.
+func (mock *LoginServiceMock) Login(ctx context.Context, name string, password string) (string, error) {
+	if mock.LoginFunc == nil {
+		panic("LoginServiceMock.LoginFunc: method is nil but LoginService.Login was just called")
+	}
+	callInfo := struct {
+		Ctx      context.Context
+		Name     string
+		Password string
+	}{
+		Ctx:      ctx,
+		Name:     name,
+		Password: password,
+	}
+	mock.lockLogin.Lock()
+	mock.calls.Login = append(mock.calls.Login, callInfo)
+	mock.lockLogin.Unlock()
+	return mock.LoginFunc(ctx, name, password)
+}
+
+// LoginCalls gets all the calls that were made to Login.
+// Check the length with:
+//
+//	len(mockedLoginService.LoginCalls())
+func (mock *LoginServiceMock) LoginCalls() []struct {
+	Ctx      context.Context
+	Name     string
+	Password string
+} {
+	var calls []struct {
+		Ctx      context.Context
+		Name     string
+		Password string
+	}
+	mock.lockLogin.RLock()
+	calls = mock.calls.Login
+	mock.lockLogin.RUnlock()
 	return calls
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/MatsuoTakuro/go_todo_app/auth"
 	"github.com/MatsuoTakuro/go_todo_app/clock"
 	"github.com/MatsuoTakuro/go_todo_app/config"
 	"github.com/MatsuoTakuro/go_todo_app/handler"
@@ -27,12 +28,32 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 	if err != nil {
 		return nil, cleanup, err
 	}
-	r := store.Repository{Clocker: clock.RealClocker{}}
+	clocker := clock.RealClocker{}
+	repo := store.Repository{Clocker: clocker}
+	kvs, err := store.NewKVS(ctx, cfg)
+	if err != nil {
+		return nil, cleanup, err
+	}
+	jwter, err := auth.NewJWTer(kvs, clocker)
+	if err != nil {
+		return nil, cleanup, err
+	}
+
+	l := &handler.Login{
+		Service: &service.Login{
+			DB:             db,
+			Repo:           &repo,
+			TokenGenerator: jwter,
+		},
+		Validator: v,
+	}
+	// curl -X POST localhost:18000/login -d '{"user_name": "john", "password": "test"}' | jq
+	mux.Post("/login", l.ServeHTTP)
 
 	at := &handler.AddTask{
 		Service: &service.AddTask{
 			DB:   db,
-			Repo: &r,
+			Repo: &repo,
 		},
 		Validator: v,
 	}
@@ -43,7 +64,7 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 	lt := &handler.ListTask{
 		Service: &service.ListTask{
 			DB:   db,
-			Repo: &r,
+			Repo: &repo,
 		},
 	}
 	// curl -i -X GET localhost:18000/tasks
@@ -52,7 +73,7 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 	ru := &handler.RegisterUser{
 		Service: &service.RegisterUser{
 			DB:   db,
-			Repo: &r,
+			Repo: &repo,
 		},
 		Validator: v,
 	}

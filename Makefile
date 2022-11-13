@@ -23,6 +23,10 @@ ps: ## Check container status
 
 test: ## Execute tests
   ## go: -race requires cgo; enable cgo by setting CGO_ENABLED=1
+	go test -race -shuffle=on ./...
+
+test-v: ## Execute tests
+  ## go: -race requires cgo; enable cgo by setting CGO_ENABLED=1
 	go test -race -shuffle=on -v ./...
 
 dry-migrate: ## Try migration
