@@ -48,6 +48,7 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 		Validator: v,
 	}
 	// curl -X POST localhost:18000/login -d '{"user_name": "john", "password": "test"}' | jq
+	// https://jwt.io/
 	mux.Post("/login", l.ServeHTTP)
 
 	at := &handler.AddTask{
