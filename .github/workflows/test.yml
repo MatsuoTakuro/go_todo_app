@@ -32,29 +32,21 @@ jobs:
         ports:
           - 6379:6379
     steps:
-      - name: setup go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '>=1.18'
-
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: migrate mysql schema
-        run: |
-          go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
-          mysqldef -u todo -p todo -h 127.0.0.1 -P 3306 todo < ./_tools/mysql/schema.sql
-
-      - name: create public.pem
-        env:
-          PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-        run: echo -n $PUBLIC_KEY | base64 --decode > ./auth/cert/public.pem
-
-      - name: create secret.pem
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: echo -n $SECRET_KEY | base64 --decode > ./auth/cert/secret.pem
-
-      - name: report coverage
-        run: go test ./... -coverprofile=coverage.out
-        uses: k1LoW/octocov-action@v0
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.18'
+    - uses: actions/checkout@v3
+    - run: |
+        go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
+        mysqldef -u todo -p todo -h 127.0.0.1 -P 3306 todo < ./_tools/mysql/schema.sql
+    - name: create public.pem
+      env:
+        PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+      run: echo -n $PUBLIC_KEY | base64 --decode > ./auth/cert/public.pem
+    - name: create secret.pem
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      run: echo -n $SECRET_KEY | base64 --decode > ./auth/cert/secret.pem
+    - run: go test ./... -coverprofile=coverage.out
+    - name: report coverage
+      uses: k1LoW/octocov-action@v0
