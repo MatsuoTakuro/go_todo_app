@@ -44,7 +44,6 @@ jobs:
         PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        ls -la
         mkdir ./auth/cert
         echo -n $PUBLIC_KEY | base64 --decode > ./auth/cert/public.pem
         echo -n $SECRET_KEY | base64 --decode > ./auth/cert/secret.pem
